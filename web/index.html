@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <script src="https://bridge.usemanifest.com/Manifest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script>
+      (async ($) => {
+        const init = async () => {
+          const token = await fetchAccessToken();
+          await fetchClientId();
+          await createTransferIntent(token)
+        };
+        // Fetch accessToken
+        const fetchAccessToken = async () => {
+          const res = await fetch("/api/get_access_token");
+          const data = await res.json();
+          const accessToken = data.accesstoken;
+          localStorage.setItem("bridge_access_token", accessToken);
+          return accessToken;
+        };
+
+        const fetchClientId = async () => {
+          const res = await fetch("/api/get_client_id");
+          const data = await res.json();
+          const clientId = data.clientId;
+          localStorage.setItem("bridge_client_id", clientId);
+        };
+
+        const createTransferIntent = async (token) => {
+          const res = await fetch("/api/create_transfer_intent", {
+            method: "POST",
+            body: JSON.stringify({ accessToken: token }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await res.json();
+          const transferIntentReference = data.transferIntentReference;
+          localStorage.setItem(
+            "bridge_transfer_intent",
+            transferIntentReference
+          );
+        };
+        init();
+      })(jQuery);
+    </script>
+  </head>
+  <title>Manifest Bridge Quickstart | Transfer old accounts</title>
+  <body>
+    <button
+      type="button"
+      id="initiate-transfer"
+      class="btn btn-primary btn-dark btn-lg"
+      style="
+        border: 1px solid black;
+        border-radius: 5px;
+        background: black;
+        height: 48px;
+        width: 300px;
+        margin-top: 5;
+        margin-left: 10;
+        color: white;
+        font-size: 18px;
+      "
+    >
+      <strong>Transfer my old accounts</strong>
+    </button>
+    <pre
+      id="response"
+      style="
+        top: 60;
+        margin-left: 10;
+        bottom: 0;
+        position: fixed;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        font-size: 14px;
+      "
+    ></pre>
+  </body>
+  <script>
+    // Create Manifest object when button is clicked
+    const initTransferButton = document.getElementById("initiate-transfer");
+    const onClose = (closeData) => {
+      if (closeData.transferStatus === "PENDING") {
+        initTransferButton.innerHTML = "Continue my transfer";
+      } else if (closeData.transferStatus === "COMPLETED"){
+        //  save transfer reference for future use
+        const { transferReference } = transferData;
+        fetch("/api/save_transfer_reference", {
+          method: "POST",
+          body: JSON.stringify({ transferReference }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      }
+    };
+    const onError = ({errorCode, errorMessage}) => {
+      console.error(errorMessage)
+    };
+
+    initTransferButton.addEventListener("click", (event) => {
+      const handler = Manifest.create({
+        accessToken: localStorage.getItem("bridge_access_token"),
+        clientId: localStorage.getItem("bridge_client_id"),
+        transferIntentReference: localStorage.getItem("bridge_transfer_intent"),
+        environment: "development",
+        onClose,
+        onError,
+      });
+      handler.open();
+    });
+  </script>
+</html>

@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <script src="https://bridge.usemanifest.com/Manifest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script>
+      (async ($) => {
+        const init = () => {
+          fetchAccessToken();
+          fetchClientId();
+          fetchTransferReference();
+        };
+
+        const fetchAccessToken = async () => {
+          const res = await fetch("/api/get_access_token");
+          const data = await res.json();
+          const accessToken = data.accesstoken;
+          localStorage.setItem("bridge_access_token", accessToken);
+        };
+
+        const fetchClientId = async () => {
+          const res = await fetch("/api/get_client_id");
+          const data = await res.json();
+          const clientId = data.clientId;
+          localStorage.setItem("bridge_client_id", clientId);
+        };
+
+        const fetchTransferReference = async () => {
+          const res = await fetch("/api/get_transfer_reference");
+          const data = await res.json();
+          const transferReference = data.transferReference;
+          localStorage.setItem("bridge_transfer_reference", transferReference);
+        };
+        init();
+      })(jQuery);
+    </script>
+  </head>
+  <title>Manifest Bridge Quickstart | Track transfer</title>
+  <body>
+    <button
+      type="button"
+      id="track-transfer"
+      class="btn btn-primary btn-dark btn-lg"
+      style="
+        border: 1px solid black;
+        border-radius: 5px;
+        background: black;
+        height: 48px;
+        width: 155px;
+        margin-top: 5;
+        margin-left: 10;
+        color: white;
+        font-size: 18px;
+      "
+    >
+      <strong>Track transfer</strong>
+    </button>
+    <pre
+      id="response"
+      style="
+        top: 60;
+        margin-left: 10;
+        bottom: 0;
+        position: fixed;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        font-size: 14px;
+      "
+    ></pre>
+  </body>
+  <script>
+    // Create Manifest object when button is clicked
+    const trackTransferButton = document.getElementById("track-transfer");
+    trackTransferButton.addEventListener("click", (event) => {
+      const handler = Manifest.create({
+        accessToken: localStorage.getItem("bridge_access_token"),
+        clientId: localStorage.getItem("bridge_client_id"),
+        transferReference: localStorage.getItem("bridge_transfer_reference"),
+        environment: "development",
+        onError: (e)=> console.error(e),
+      });
+      handler.open();
+    });
+  </script>
+</html>
