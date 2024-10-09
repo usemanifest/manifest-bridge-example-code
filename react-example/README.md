@@ -1,6 +1,6 @@
 # Overview
 
-This is a simple web app that implements Manifest Bridge using basic HTML and Javascript with an Express backend. After user exit the Manifest Bridge, the app retrieve the transfer status and renders on the home page.
+This is a simple web app that implements Manifest Bridge using React. After user exit the Manifest Bridge, the app retrieve the transfer status and renders on the home page.
 
 Full documentation [here](https://manifest.stoplight.io/docs/documentation/199d301709248-embedding-bridge-inside-your-web-application#react)
 
