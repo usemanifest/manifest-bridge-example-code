@@ -7,7 +7,7 @@ const fetch = require("node-fetch");
 
 const apiURL =
   process.env.BRIDGE_ENVIRONMENT === "production"
-    ? "URL_TBC" // PROD URL is under progress
+    ? "https://api.usemanifest.com/v1" // PROD URL is under progress
     : "https://api.development.usemanifest.com/v1";
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -77,17 +77,21 @@ app.post("/api/create_transfer_intent", async (req, res) => {
   });
 
   const data = await transferIntentResponse.json();
-  res.json({ transferIntentReference: data.transferIntentResponse.transferIntentReference });
+  res.json({ transferIntentId: data.transferIntentResponse.transferIntentId });
 });
 
-app.get("/api/get_transfer_reference", async (_, res) => {
-  // Your logic of getting transfer reference
-  res.json({ transferReference: "YOUR_TRANSFER_REFERENCE" });
+app.get("/api/get_user_id", async (_, res) => {
+  // Your logic of getting user id (Manifest user id)
+  res.json({ userId: "YOUR_USER_ID" });
 });
 
-app.post("/api/save_transfer_reference", async(req, res)=>{
-    // Your logic of saving transfer reference
+app.post("/api/save_user_id", async(req, res)=>{
+    // Your logic of saving user id - this is useful to retrieve user's transfer status
     res.json(true)
 })
 
+app.post("/api/save_transfer_id", async(req, res)=>{
+  // Your logic of saving transfer id
+  res.json(true)
+})
 app.listen(process.env.PORT || 8080);

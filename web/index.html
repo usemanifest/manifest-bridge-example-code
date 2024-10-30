@@ -34,10 +34,10 @@
             },
           });
           const data = await res.json();
-          const transferIntentReference = data.transferIntentReference;
+          const transferIntentId = data.transferIntentId;
           localStorage.setItem(
             "bridge_transfer_intent",
-            transferIntentReference
+            transferIntentId
           );
         };
         init();
@@ -84,11 +84,18 @@
       if (closeData.transferStatus === "PENDING") {
         initTransferButton.innerHTML = "Continue my transfer";
       } else if (closeData.transferStatus === "COMPLETED"){
-        //  save transfer reference for future use
-        const { transferReference } = transferData;
-        fetch("/api/save_transfer_reference", {
+        //  save transfer id and user id for future use
+        const { transferId, userId } = transferData;
+        fetch("/api/save_transfer_id", {
           method: "POST",
-          body: JSON.stringify({ transferReference }),
+          body: JSON.stringify({ transferId }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        fetch("/api/save_user_id", {
+          method: "POST",
+          body: JSON.stringify({ userId }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -103,7 +110,7 @@
       const handler = Manifest.create({
         accessToken: localStorage.getItem("bridge_access_token"),
         clientId: localStorage.getItem("bridge_client_id"),
-        transferIntentReference: localStorage.getItem("bridge_transfer_intent"),
+        transferIntentId: localStorage.getItem("bridge_transfer_intent"),
         environment: "development",
         onClose,
         onError,

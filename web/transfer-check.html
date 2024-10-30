@@ -7,7 +7,7 @@
         const init = () => {
           fetchAccessToken();
           fetchClientId();
-          fetchTransferReference();
+          fetchUserId();
         };
 
         const fetchAccessToken = async () => {
@@ -24,11 +24,11 @@
           localStorage.setItem("bridge_client_id", clientId);
         };
 
-        const fetchTransferReference = async () => {
-          const res = await fetch("/api/get_transfer_reference");
+        const fetchUserId = async () => {
+          const res = await fetch("/api/get_user_id");
           const data = await res.json();
-          const transferReference = data.transferReference;
-          localStorage.setItem("bridge_transfer_reference", transferReference);
+          const userId = data.userId;
+          localStorage.setItem("bridge_user_id", userId);
         };
         init();
       })(jQuery);
@@ -74,7 +74,7 @@
       const handler = Manifest.create({
         accessToken: localStorage.getItem("bridge_access_token"),
         clientId: localStorage.getItem("bridge_client_id"),
-        transferReference: localStorage.getItem("bridge_transfer_reference"),
+        userId: localStorage.getItem("bridge_user_id"),
         environment: "development",
         onError: (e)=> console.error(e),
       });

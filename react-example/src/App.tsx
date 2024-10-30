@@ -1,36 +1,37 @@
-import { ManifestBridgeOnCloseData } from "react-manifest-bridge";
-import "./App.css";
-import { useEffect, useState } from "react";
+import { ManifestBridgeOnCloseData } from 'react-manifest-bridge';
+import './App.css';
+import { useEffect, useState } from 'react';
 import {
   fetchBridgeAccessToken,
-  fetchBridgeTransferIntentReference,
+  fetchBridgeTransferIntentId,
   onTransferCompleteHandler,
-} from "./lib/bridge";
-import TransferIn from "./components/TransferIn";
-import TransferStatus from "./components/TransferStatus";
+} from './lib/bridge';
+import TransferIn from './components/TransferIn';
+import TransferStatus from './components/TransferStatus';
 
 function App() {
-  const [accessToken, setAccessToken] = useState<string>("");
-  const [transferIntentReference, setTransferIntentReference] =
-    useState<string>("");
+  const [accessToken, setAccessToken] = useState<string>('');
+  const [transferIntentId, setTransferIntentId] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isTransferCompleted, setIsTransferCompleted] = useState<boolean>(false);
-  const [transferReference, setTransferReference] = useState<string>(
-    ""
-  );
+  const [isTransferCompleted, setIsTransferCompleted] =
+    useState<boolean>(false);
+
+  const [userId, setUserId] = useState<string>();
 
   const onClose = ({
     transferData,
     transferStatus,
   }: ManifestBridgeOnCloseData) => {
-    setIsTransferCompleted(transferStatus === "COMPLETED");
+    setIsTransferCompleted(transferStatus === 'COMPLETED');
 
-    const { transferReference: lTransferReference, userReference } = transferData;
-    if (lTransferReference) {
-      setTransferReference(lTransferReference);
-    }
-    if (lTransferReference && userReference) {
-      onTransferCompleteHandler({ transferReference:lTransferReference, userReference });
+    const { transferId: lTransferId, userId: lUserId } = transferData;
+
+    if (transferStatus === 'COMPLETED' && lTransferId && lUserId) {
+      setUserId(lUserId);
+      onTransferCompleteHandler({
+        transferId: lTransferId as string[],
+        userId: lUserId,
+      });
     }
   };
 
@@ -38,9 +39,8 @@ function App() {
     const init = async () => {
       const accessToken = await fetchBridgeAccessToken();
       setAccessToken(accessToken);
-      const transferIntentReference =
-        await fetchBridgeTransferIntentReference();
-      setTransferIntentReference(transferIntentReference);
+      const transferIntentId = await fetchBridgeTransferIntentId();
+      setTransferIntentId(transferIntentId);
       setIsLoading(false);
     };
 
@@ -50,11 +50,11 @@ function App() {
   return (
     <>
       <h1>InvestCo</h1>
-      {isTransferCompleted && transferReference ? (
+      {isTransferCompleted && userId ? (
         <TransferStatus
           clientId={import.meta.env.VITE_BRIDGE_CLIENT_ID}
           accessToken={accessToken}
-          transferReference={transferReference}
+          userId={userId}
           onCloseHandler={onClose}
         />
       ) : (
@@ -63,7 +63,7 @@ function App() {
             clientId={import.meta.env.VITE_BRIDGE_CLIENT_ID}
             accessToken={accessToken}
             onCloseHandler={onClose}
-            transferIntentReference={transferIntentReference}
+            transferIntentId={transferIntentId}
           />
         )
       )}

@@ -4,10 +4,10 @@ import { useManifestBridge } from "react-manifest-bridge";
 import { TransferProps } from "../typings";
 
 interface TransferInProps extends TransferProps {
-  transferIntentReference: string;
+  transferIntentId: string;
 }
 const TransferIn: FunctionComponent<TransferInProps> = ({
-  transferIntentReference,
+  transferIntentId,
   onCloseHandler,
   accessToken,
   clientId,
@@ -15,7 +15,7 @@ const TransferIn: FunctionComponent<TransferInProps> = ({
   const { open } = useManifestBridge({
     clientId,
     accessToken,
-    transferIntentReference,
+    transferIntentId,
     onClose: onCloseHandler,
     onError: (e) => console.error(e),
     environment: import.meta.env.VITE_BRIDGE_ENVIRONMENT,

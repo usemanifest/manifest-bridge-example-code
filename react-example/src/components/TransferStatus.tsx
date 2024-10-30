@@ -4,10 +4,10 @@ import { useManifestBridge } from "react-manifest-bridge";
 import { TransferProps } from "../typings";
 
 interface TransferStatusProps extends TransferProps {
-  transferReference: string;
+  userId: string;
 }
 const TransferStatus: FunctionComponent<TransferStatusProps> = ({
-    transferReference,
+    userId,
   onCloseHandler,
   accessToken,
   clientId,
@@ -15,7 +15,7 @@ const TransferStatus: FunctionComponent<TransferStatusProps> = ({
   const { open } = useManifestBridge({
     clientId,
     accessToken,
-    transferReference,
+    userId,
     onClose: onCloseHandler,
     onError: (e) => console.error(e),
     environment: import.meta.env.VITE_BRIDGE_ENVIRONMENT,

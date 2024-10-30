@@ -24,7 +24,7 @@ cp .env.example .env
 
 Fill out the contents of the .env file with the client id and client secret in your Manifest Portal.
 
-Complete the functions of fetching transfer intent reference and saving transfer data in lib/bridge.ts
+Complete the functions of fetching transfer intent id and saving transfer data in lib/bridge.ts
 
 Start the app
 

@@ -2,7 +2,8 @@ import axios from "axios";
 const API_URL =
   import.meta.env.VITE_BRIDGE_ENVIRONMENT === "development"
     ? "https://api.development.usemanifest.com/v1"
-    : "PROD_URL_TBC";
+    : "https://api.usemanifest.com/v1";
+
 export const fetchBridgeAccessToken = async () => {
   // YOUR API of fetching bridge access token
   // MORE information about authentication
@@ -18,46 +19,50 @@ export const fetchBridgeAccessToken = async () => {
     method:'POST',
   })
   return authRes.data.accessToken
+
 };
 
-export const fetchBridgeTransferIntentReference = async () => {
+export const fetchBridgeTransferIntentId = async () => {
   // YOUR API of fetching / creating transfer intent
-  // MORE information about transfer intent reference:
+  // MORE information about transfer intent id:
   // https://manifest.stoplight.io/docs/api-reference/4i0a6agythco0-create-transfer-intent
-  return "YOUR_TRANSFER_INTENT_REFERENCE";
+  return "YOUR_BRIDGE_ACCESS_TOKEN";
 };
 
 export const onTransferCompleteHandler = async ({
-  transferReference,
-  userReference,
+  transferId,
+  userId,
 }: {
-  transferReference: string;
-  userReference: string;
+  transferId: string[];
+  userId: string;
 }) => {
-  // FETCH Transfer details: More information about fetching transfer details:
-  // https://manifest.stoplight.io/docs/api-reference/eaapapk7ht2nb-get-transfer
-  const transferDetailsRes = await axios.get(
-    `${API_URL}/transfers?transferId=${transferReference}`,
+  // FETCH the user's transfer details: More information about fetching user transfer details:
+  // https://manifest.stoplight.io/docs/api-reference/cf86p6qiar2lf-get-transfers
+  const userDetailsRes = await axios.get(
+    `${API_URL}/users/${userId}/transfers`,
     {
       headers: {
-        Authentication: `Bearer YOUR TOKEN`,
+        Authentication: `Bearer YOUR_TOKEN`,
       },
     }
   );
   // YOUR API of saving transfer data for future use
-  console.log(transferDetailsRes);
-
-  // FETCH User details: More information about fetching user details:
-  // https://manifest.stoplight.io/docs/api-reference/g2f2gaho1zmfo-get-user
-  const userDetailsRes = await axios.get(
-    `${API_URL}/users?userId=${userReference}`,
-    {
-      headers: {
-        Authentication: `Bearer YOUR TOKEN`,
-      },
-    }
-  );
   console.log(userDetailsRes);
+
+  // OR
+
+  // You can fetch transfer details one by one
+  // https://manifest.stoplight.io/docs/api-reference/eaapapk7ht2nb-get-transfer
+  const transferDetails = Promise.all(transferId.map((id: string) =>
+   axios.get(`${API_URL}/transfer?transferId=${id}`,{
+    headers: {
+      Authentication: `Bearer YOUR_TOKEN`,
+    },
+    
+    }),
+  ),)
+  console.log(transferDetails)
+
   // YOUR API of saving transfer data for future use
   return true;
 };
