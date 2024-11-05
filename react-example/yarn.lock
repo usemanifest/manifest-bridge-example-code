@@ -1407,10 +1407,10 @@ react-dom@^18.3.1:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-manifest-bridge@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-manifest-bridge/-/react-manifest-bridge-1.1.0.tgz#da5866485dcdd60f588a79a650b45dd81d60767c"
-  integrity sha512-EaPnia1gYLgv1/sW34hV185e0BZtKuoJOVDfYDEvrKWzIuuNLAfkk0Nzo/FtlFJxBImTv95vQxx/g8un2cBAIQ==
+react-manifest-bridge@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-manifest-bridge/-/react-manifest-bridge-1.2.0.tgz#f93ca87a37daea5920d271e46de123ba6b34172b"
+  integrity sha512-qScSow8pkPET9KSwtOyQvTipturbWRDu30rapLz55dZR/SVVO5sEeMS//yHkmEAX/zqf7jYhLbO+Ljn03+noXg==
 
 react-refresh@^0.14.2:
   version "0.14.2"

@@ -81,9 +81,9 @@
     // Create Manifest object when button is clicked
     const initTransferButton = document.getElementById("initiate-transfer");
     const onClose = (closeData) => {
-      if (closeData.transferStatus === "PENDING") {
+      if (closeData.transferIntentStatus === "PENDING") {
         initTransferButton.innerHTML = "Continue my transfer";
-      } else if (closeData.transferStatus === "COMPLETED"){
+      } else if (closeData.transferIntentStatus === "COMPLETED"){
         //  save transfer id and user id for future use
         const { transferId, userId } = transferData;
         fetch("/api/save_transfer_id", {

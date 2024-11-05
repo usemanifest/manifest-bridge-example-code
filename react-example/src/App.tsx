@@ -20,13 +20,13 @@ function App() {
 
   const onClose = ({
     transferData,
-    transferStatus,
+    transferIntentStatus
   }: ManifestBridgeOnCloseData) => {
-    setIsTransferCompleted(transferStatus === 'COMPLETED');
+    setIsTransferCompleted(transferIntentStatus === 'COMPLETED');
 
     const { transferId: lTransferId, userId: lUserId } = transferData;
 
-    if (transferStatus === 'COMPLETED' && lTransferId && lUserId) {
+    if (transferIntentStatus === 'COMPLETED' && lTransferId && lUserId) {
       setUserId(lUserId);
       onTransferCompleteHandler({
         transferId: lTransferId as string[],
